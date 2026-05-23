@@ -32,24 +32,28 @@ class AccountController extends Controller
 
         // Validasi input profil
         $validated = $request->validate([
-            'name'   => ['required', 'string', 'max:255'],
-            'email'  => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'phone'  => ['nullable', 'string', 'max:20'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'], // Maks 2MB
+            'name'        => ['required', 'string', 'max:255'],
+            'email'       => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'phone'       => ['nullable', 'string', 'max:20'],
+            'class_level' => ['required', 'in:6,9,12'],
+            'avatar'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'], // Maks 2MB
         ], [
-            'name.required'  => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Alamat email wajib diisi.',
-            'email.email'    => 'Format alamat email tidak valid.',
-            'email.unique'   => 'Alamat email ini sudah digunakan oleh pengguna lain.',
-            'avatar.image'   => 'Berkas avatar harus berupa gambar.',
-            'avatar.mimes'   => 'Format gambar avatar harus jpeg, png, jpg, atau webp.',
-            'avatar.max'     => 'Ukuran gambar avatar tidak boleh lebih dari 2MB.',
+            'name.required'        => 'Nama lengkap wajib diisi.',
+            'email.required'       => 'Alamat email wajib diisi.',
+            'email.email'          => 'Format alamat email tidak valid.',
+            'email.unique'         => 'Alamat email ini sudah digunakan oleh pengguna lain.',
+            'class_level.required' => 'Jenjang kelas wajib dipilih.',
+            'class_level.in'       => 'Jenjang kelas tidak valid.',
+            'avatar.image'         => 'Berkas avatar harus berupa gambar.',
+            'avatar.mimes'         => 'Format gambar avatar harus jpeg, png, jpg, atau webp.',
+            'avatar.max'           => 'Ukuran gambar avatar tidak boleh lebih dari 2MB.',
         ]);
 
         // Update basic fields
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         $user->phone = $validated['phone'] ?? null;
+        $user->class_level = $validated['class_level'];
 
         // Penanganan upload avatar
         if ($request->hasFile('avatar')) {
