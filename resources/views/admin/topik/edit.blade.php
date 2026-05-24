@@ -28,7 +28,12 @@
     </a>
 </div>
 
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6" x-data="{ content: `{{ old('description', $topik->description) }}` }">
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6" x-data="{ 
+    content: `{{ old('description', $topik->description) }}`,
+    get preview() {
+        return this.content ? marked.parse(this.content) : '<p class=\'text-gray-400 italic\'>Preview akan muncul di sini...</p>';
+    }
+}">
     <form action="{{ route('admin.topik.update', $topik->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -91,7 +96,7 @@
                     <span class="text-xl">👁️</span>
                     <h3 class="font-bold text-gray-700">Live Preview</h3>
                 </div>
-                <div class="prose-preview text-gray-800 flex-1 overflow-y-auto max-h-[600px]" x-html="content ? marked.parse(content) : '<p class=\'text-gray-400 italic\'>Preview akan muncul di sini...</p>'">
+                <div class="prose-preview text-gray-800 flex-1 overflow-y-auto max-h-[600px]" x-html="preview">
                 </div>
             </div>
         </div>

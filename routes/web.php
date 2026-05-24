@@ -93,6 +93,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/soal', [QuestionController::class, 'index'])->name('soal.index');
     Route::get('/soal/tambah', [QuestionController::class, 'create'])->name('soal.create');
     Route::post('/soal', [QuestionController::class, 'store'])->name('soal.store');
+    Route::post('/soal/import', [QuestionController::class, 'importExcel'])->name('soal.import');
     Route::get('/soal/{question}/edit', [QuestionController::class, 'edit'])->name('soal.edit');
     Route::put('/soal/{question}', [QuestionController::class, 'update'])->name('soal.update');
     Route::delete('/soal/{question}', [QuestionController::class, 'destroy'])->name('soal.destroy');

@@ -106,8 +106,8 @@ class SessionController extends Controller
             'question_id'     => 'required|exists:questions,id',
             'selected_answer' => 'nullable|string',
             'time_spent'      => 'required|integer|min:0',
-            'is_marked'       => 'boolean',
-            // 'hint_used'       => 'boolean', // Assuming hint_used is also submitted
+            'is_marked'       => 'nullable|boolean',
+            'hint_used'       => 'nullable|boolean',
         ]);
 
         $question = $session->testPackage->questions()->where('questions.id', $request->question_id)->firstOrFail();
@@ -117,6 +117,8 @@ class SessionController extends Controller
             if ($question->type === 'multiple_choice') {
                 $isCorrect = ($request->selected_answer === $question->correct_answer);
             } else {
+                // Trim dan case-insensitive untuk isian singkat / benar-salah
+                $isCorrect = (trim(strtolower($request->selected_answer)) === trim(strtolower($question->correct_answer)));
                 // Untuk soal essay (short_answer)
                 $studentAns = preg_replace('/\s+/', ' ', strtolower(trim($request->selected_answer)));
                 $correctAns = preg_replace('/\s+/', ' ', strtolower(trim($question->correct_answer)));
@@ -131,15 +133,15 @@ class SessionController extends Controller
             ],
             [
                 'selected_answer'    => $request->selected_answer,
-                'is_correct'         => $isCorrect,
+                'is_correct'         => $isCorrect ?? false,
                 'is_marked'          => $request->is_marked ?? false,
-                'hint_used'          => $request->hint_used ?? false, // Assuming hint_used is optional
+                'hint_used'          => $request->hint_used ?? false,
                 'time_spent_seconds' => $request->time_spent,
             ]
         );
 
-        // Update session total time spent (simple aggregation)
-        $session->increment('time_spent_seconds', $request->time_spent);
+        // Update session total time spent (optional: sometimes better to sum answers at finish)
+        // $session->increment('time_spent_seconds', $request->time_spent);
 
         return response()->json(['message' => 'Jawaban berhasil disimpan.'], 200);
     }

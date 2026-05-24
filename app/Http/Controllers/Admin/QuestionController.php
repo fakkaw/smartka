@@ -8,9 +8,46 @@ use App\Models\Subject;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\SoalImport;
 
 class QuestionController extends Controller
 {
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'subject_id'   => 'required|exists:subjects,id',
+            'topic_id'     => 'required|exists:topics,id',
+            'class_level'  => 'required|in:6,9,12',
+            'difficulty'   => 'required|in:easy,medium,hard',
+            'type'         => 'required|in:multiple_choice,true_false,short_answer',
+            'status'       => 'required|in:draft,active,archived',
+            'excel_file'   => 'required|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        $import = new SoalImport($request->only([
+            'subject_id', 'topic_id', 'class_level', 'difficulty', 'type', 'status'
+        ]));
+
+        try {
+            Excel::import($import, $request->file('excel_file'));
+            
+            $successCount = $import->rows;
+            $failCount    = count($import->failures());
+
+            if ($failCount > 0) {
+                $errorMessage = "Berhasil import $successCount soal, tapi ada $failCount baris yang bermasalah.";
+                return back()->with('warning', $errorMessage)->with('import_failures', $import->failures());
+            }
+
+            return redirect()->route('admin.soal.index')
+                ->with('success', "Berhasil import $successCount soal sekaligus!");
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat membaca file: ' . $e->getMessage());
+        }
+    }
+
     public function index(Request $request)
     {
         $query = Question::with(['subject', 'topic'])
@@ -57,8 +94,10 @@ class QuestionController extends Controller
             'option_b'     => 'required_if:type,multiple_choice',
             'option_c'     => 'required_if:type,multiple_choice',
             'option_d'     => 'required_if:type,multiple_choice',
+            'option_e'     => 'nullable',
             'correct_answer'    => 'required|string',
             'explanation_text'  => 'nullable|string',
+            'explanation_video_url' => 'nullable|url',
             'status'            => 'required|in:draft,active,archived',
         ]);
 
@@ -89,8 +128,16 @@ class QuestionController extends Controller
             'topic_id'      => 'required|exists:topics,id',
             'class_level'   => 'required|in:6,9,12',
             'difficulty'    => 'required|in:easy,medium,hard',
+            'type'          => 'required|in:multiple_choice,true_false,short_answer',
             'question_text' => 'required|string',
+            'option_a'      => 'nullable|required_if:type,multiple_choice',
+            'option_b'      => 'nullable|required_if:type,multiple_choice',
+            'option_c'      => 'nullable|required_if:type,multiple_choice',
+            'option_d'      => 'nullable|required_if:type,multiple_choice',
+            'option_e'      => 'nullable',
             'correct_answer'=> 'required|string',
+            'explanation_text'  => 'nullable|string',
+            'explanation_video_url' => 'nullable|url',
             'status'        => 'required|in:draft,active,archived',
         ]);
 
