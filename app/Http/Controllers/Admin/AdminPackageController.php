@@ -40,12 +40,18 @@ class AdminPackageController extends Controller
             'duration_minutes' => 'required|integer|min:10',
             'type'             => 'required|in:free,premium',
             'status'           => 'required|in:draft,published',
+            'is_tryout'        => 'sometimes|boolean',
             'question_ids'     => 'required|array|min:1',
             'question_ids.*'   => 'exists:questions,id',
         ]);
 
+        $packageName = $request->name;
+        if ($request->boolean('is_tryout') && !preg_match('/try\s*out/i', $packageName)) {
+            $packageName = 'Try Out - ' . $packageName;
+        }
+
         $package = TestPackage::create([
-            'name'             => $request->name,
+            'name'             => $packageName,
             'description'      => $request->description,
             'class_level'      => $request->class_level,
             'total_questions'  => count($request->question_ids),

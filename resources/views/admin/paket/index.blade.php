@@ -49,7 +49,7 @@
                             </span>
                         </td>
                         <td class="px-5 py-4">
-                            <a href="#" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Edit</a>
+                            <a href="{{ route('admin.paket.edit', $package) }}" class="text-blue-600 hover:text-blue-800 font-semibold text-sm">Edit</a>
                         </td>
                     </tr>
                 @empty

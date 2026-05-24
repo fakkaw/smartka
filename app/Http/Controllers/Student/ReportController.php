@@ -3,58 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Result;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-class ReportController extends Controller
-{
-    /**
-     * Display the user's progress report and statistics.
-     */
-    public function index()
-    {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-
-        // Mengambil seluruh riwayat hasil latihan dengan eager loading
-        $resultsHistory = $user->results()
-                               ->with(['session', 'session.testPackage'])
-                               ->latest()
-                               ->get();
-
-        // Metrik utama
-        $averageScore = $user->getAverageScore();
-        $totalExercises = $user->sessions()->where('status', 'completed')->count();
-        $totalAnswered = $user->getTotalAnswered();
-        $weakTopics = $user->getWeakTopics();
-
-        // Menghitung rata-rata nilai per mata pelajaran
-        $subjectStats = [];
-        foreach ($resultsHistory as $result) {
-            $scoresPerSubject = $result->score_per_subject ?? [];
-            foreach ($scoresPerSubject as $subject => $score) {
-                if (!isset($subjectStats[$subject])) {
-                    $subjectStats[$subject] = ['total_score' => 0, 'count' => 0];
-                }
-                $subjectStats[$subject]['total_score'] += $score;
-                $subjectStats[$subject]['count'] += 1;
-            }
-        }
-
-        // Hitung rata-rata final per mapel
-        $subjectAverages = [];
-        foreach ($subjectStats as $subject => $data) {
-            $subjectAverages[$subject] = round($data['total_score'] / $data['count'], 1);
-        }
-
-        return view('laporan.index', compact(
-            'resultsHistory', 
-            'averageScore', 
-            'totalExercises', 
-            'totalAnswered', 
-            'weakTopics',
-            'subjectAverages'
 use App\Models\UserSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +25,7 @@ class ReportController extends Controller
             'week'     => Carbon::now()->subDays(7),
             'month'    => Carbon::now()->subDays(30),
             'semester' => Carbon::now()->subMonths(6),
-            default    => null
+            default    => null,
         };
         
         if ($dateLimit) {
@@ -86,23 +34,25 @@ class ReportController extends Controller
         
         $sessions = $query->orderBy('finished_at', 'asc')->get();
         
-        // ─── Metrics ──────────────────────────────────────────
         $totalSessions = $sessions->count();
         $avgScore = $totalSessions > 0
             ? round($sessions->map(fn($s) => optional($s->result)->total_score ?? 0)->avg(), 1)
             : 0;
-            
+        
         $totalCorrect = $sessions->map(fn($s) => optional($s->result)->correct_count ?? 0)->sum();
         $totalWrong   = $sessions->map(fn($s) => optional($s->result)->wrong_count ?? 0)->sum();
         $totalEmpty   = $sessions->map(fn($s) => optional($s->result)->empty_count ?? 0)->sum();
         $totalTime    = $sessions->sum('time_spent_seconds');
         
-        // Format time spent nicely
         $hours = floor($totalTime / 3600);
         $minutes = floor(($totalTime / 60) % 60);
         $timeSpentLabel = $hours > 0 ? "{$hours}j {$minutes}m" : "{$minutes}m";
 
-        // ─── Score Trend Dataset ──────────────────────────────
+        $averageScore = $user->getAverageScore();
+        $totalExercises = $totalSessions;
+        $totalAnswered = $user->getTotalAnswered();
+        $weakTopics = $user->getWeakTopics();
+
         $trendLabels = [];
         $trendScores = [];
         foreach ($sessions as $s) {
@@ -110,7 +60,6 @@ class ReportController extends Controller
             $trendScores[] = optional($s->result)->total_score ?? 0;
         }
         
-        // ─── Subject Strength Aggregator ──────────────────────
         $subjectScores = [];
         foreach ($sessions as $s) {
             $scores = optional($s->result)->score_per_subject;
@@ -121,30 +70,25 @@ class ReportController extends Controller
             }
         }
         
-        $subjectsList = [];
         $subjectAverages = [];
         foreach ($subjectScores as $subName => $vals) {
-            $subjectsList[] = $subName;
-            $subjectAverages[] = round(array_sum($vals) / count($vals), 1);
+            $subjectAverages[$subName] = round(array_sum($vals) / count($vals), 1);
         }
 
-        // Weak topics from the latest result
-        $latestResult = $user->results()->latest()->first();
-        $weakTopics = $latestResult?->weakness_topics ?? [];
+        $resultsHistory = $user->results()
+            ->with(['session', 'session.testPackage'])
+            ->latest()
+            ->get();
 
         return view('laporan.index', compact(
             'period',
+            'resultsHistory',
+            'averageScore',
+            'totalExercises',
             'totalSessions',
-            'avgScore',
-            'totalCorrect',
-            'totalWrong',
-            'totalEmpty',
-            'timeSpentLabel',
-            'trendLabels',
-            'trendScores',
-            'subjectsList',
-            'subjectAverages',
-            'weakTopics'
+            'totalAnswered',
+            'weakTopics',
+            'subjectAverages'
         ));
     }
 }
