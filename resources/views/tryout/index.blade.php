@@ -38,7 +38,11 @@
             </div>
             <div class="flex items-center gap-1 bg-red-50 px-2 py-1 rounded border border-red-100 shadow-sm text-red-700">
                 <span class="text-base">⏱️</span>
-                <span class="font-bold">{{ $package->duration_minutes }} Menit</span>
+                @if($package->duration_minutes > 0)
+                    <span class="font-bold">{{ $package->duration_minutes }} Menit</span>
+                @else
+                    <span class="font-bold">Tanpa Waktu</span>
+                @endif
             </div>
         </div>
     </a>

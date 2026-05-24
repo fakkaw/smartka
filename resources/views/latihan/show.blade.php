@@ -20,7 +20,7 @@
         </div>
         <div class="flex items-center gap-2">
             <span class="text-lg">⏱️</span>
-            <span>Durasi: <span class="font-semibold">{{ $package->duration_minutes }} Menit</span></span>
+            <span>Durasi: <span class="font-semibold">@if($package->duration_minutes > 0) {{ $package->duration_minutes }} Menit @else Tanpa Waktu @endif</span></span>
         </div>
         <div class="flex items-center gap-2">
             <span class="text-lg">✅</span>

@@ -10,9 +10,15 @@
             </h1>
             <p class="text-gray-500 text-sm">Kerjakan dengan jujur dan teliti!</p>
         </div>
+        @if($package->duration_minutes > 0)
         <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl font-bold border border-blue-200">
             Sisa Waktu: <span id="timerDisplay">--:--</span>
         </div>
+        @else
+        <div class="bg-gray-50 text-gray-600 px-4 py-2 rounded-xl font-semibold border border-gray-100">
+            Tanpa Waktu
+        </div>
+        @endif
     </div>
 </div>
 
@@ -155,25 +161,28 @@
     // Inisialisasi Timer
     let durationSeconds = {{ $package->duration_minutes * 60 }};
     let timeSpent = {{ $session->time_spent_seconds }};
-    let remainingTime = Math.max(0, durationSeconds - timeSpent);
-    
-    function updateTimer() {
-        let min = Math.floor(remainingTime / 60);
-        let sec = remainingTime % 60;
-        document.getElementById('timerDisplay').innerText = 
-            (min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec;
-        
-        if (remainingTime > 0) {
-            remainingTime--;
-            timeSpent++;
-        } else {
-            // Waktu habis, submit form otomatis
-            document.querySelector('#finishModal form').submit();
+
+    if (durationSeconds > 0) {
+        let remainingTime = Math.max(0, durationSeconds - timeSpent);
+
+        function updateTimer() {
+            let min = Math.floor(remainingTime / 60);
+            let sec = remainingTime % 60;
+            document.getElementById('timerDisplay').innerText = 
+                (min < 10 ? '0' : '') + min + ':' + (sec < 10 ? '0' : '') + sec;
+
+            if (remainingTime > 0) {
+                remainingTime--;
+                timeSpent++;
+            } else {
+                // Waktu habis, submit form otomatis
+                document.querySelector('#finishModal form').submit();
+            }
         }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
     }
-    
-    setInterval(updateTimer, 1000);
-    updateTimer();
 
     // Data AlpineJS
     function latihanSoal() {

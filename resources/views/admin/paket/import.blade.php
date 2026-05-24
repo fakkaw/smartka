@@ -3,7 +3,7 @@
 @section('title', 'Import Soal via Excel')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-6" x-data="{ fileSelected: null, subjectId: '' }">
+<div class="max-w-4xl mx-auto space-y-6" x-data="{ fileSelected: null, subjectId: '', isTryout: {{ old('is_tryout', 0) ? 'true' : 'false' }} }">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a href="{{ route('admin.paket.index') }}" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-50 shadow-sm transition">
@@ -76,9 +76,21 @@
 
                 {{-- Durasi --}}
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Waktu Pengerjaan (Menit) <span class="text-red-500">*</span></label>
-                    <input type="number" name="duration_minutes" required min="10" value="60"
-                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Waktu Pengerjaan (Menit)
+                        <span class="text-red-500" x-show="isTryout">*</span>
+                    </label>
+                    <input type="number" name="duration_minutes" :required="isTryout" min="10" value="60"
+                        class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        :disabled="!isTryout">
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <input type="hidden" name="is_tryout" value="0">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="is_tryout" value="1" @change="isTryout = $event.target.checked"
+                            class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                        <span class="text-sm text-gray-700">Ini paket Try Out (gunakan durasi)</span>
+                    </label>
                 </div>
 
                 {{-- Tipe --}}

@@ -13,7 +13,7 @@
         <h1 class="text-xl font-bold text-gray-900">Tambah Paket Try Out / Latihan</h1>
     </div>
 
-    <form action="{{ route('admin.paket.store') }}" method="POST" class="space-y-6">
+    <form action="{{ route('admin.paket.store') }}" method="POST" class="space-y-6" x-data="{ isTryout: {{ old('is_tryout', 0) ? 'true' : 'false' }} }">
         @csrf
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -51,10 +51,14 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
+                    <div x-show="isTryout" x-cloak>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Durasi (menit)</label>
-                        <input type="number" name="duration_minutes" value="{{ old('duration_minutes', 60) }}" min="10" required
-                            class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                        <input type="number" name="duration_minutes" value="{{ old('duration_minutes', 60) }}" min="10"
+                            :required="isTryout" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div x-show="!isTryout" x-cloak>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Durasi (menit)</label>
+                        <input type="number" value="0" disabled class="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-100 text-gray-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
@@ -76,6 +80,7 @@
                     <label class="flex items-center gap-3 cursor-pointer">
                         <input type="hidden" name="is_tryout" value="0">
                         <input type="checkbox" name="is_tryout" value="1" {{ old('is_tryout') ? 'checked' : '' }}
+                            @change="isTryout = $event.target.checked"
                             class="w-5 h-5 text-blue-600 rounded border-gray-300">
                         <span class="text-sm text-gray-700">Tandai sebagai paket Try Out</span>
                     </label>

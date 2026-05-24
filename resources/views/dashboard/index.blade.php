@@ -221,7 +221,7 @@
       {{-- Meta --}}
       <div class="flex items-center gap-3 text-xs text-gray-400 mb-4">
         <span class="flex items-center gap-1">📝 {{ $pkg->questions_count }} soal</span>
-        <span class="flex items-center gap-1">⏱️ {{ $pkg->duration_minutes }} mnt</span>
+        <span class="flex items-center gap-1">⏱️ @if($pkg->duration_minutes > 0) {{ $pkg->duration_minutes }} mnt @else Tanpa Waktu @endif</span>
         <span class="flex items-center gap-1">
           {{ $pkg->class_level == '6' ? '🏫' : ($pkg->class_level == '9' ? '🏢' : '🎓') }}
           Kelas {{ $pkg->class_level }}

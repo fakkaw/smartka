@@ -9,7 +9,7 @@
     </a>
 </div>
 
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6" x-data="{ selectedQuestions: {{ json_encode($package->questions->pluck('id')) }} }">
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6" x-data="{ selectedQuestions: {{ json_encode($package->questions->pluck('id')) }}, isTryout: {{ preg_match('/try\\s*out/i', $package->name) ? 'true' : 'false' }} }">
     <form action="{{ route('admin.paket.update', $package->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -51,10 +51,15 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
+                    <div x-show="isTryout" x-cloak>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Durasi (Menit)</label>
-                        <input type="number" name="duration_minutes" value="{{ old('duration_minutes', $package->duration_minutes) }}" required min="10"
+                        <input type="number" name="duration_minutes" value="{{ old('duration_minutes', $package->duration_minutes) }}" min="10"
+                            :required="isTryout"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div x-show="!isTryout" x-cloak>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Durasi (Menit)</label>
+                        <input type="number" value="0" disabled class="w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-gray-100 text-gray-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
@@ -71,6 +76,14 @@
                         <input type="checkbox" name="is_randomized" value="1" {{ old('is_randomized', $package->is_randomized) ? 'checked' : '' }}
                             class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
                         <span class="text-sm font-medium text-gray-700">Acak Urutan Soal saat Dikerjakan</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="hidden" name="is_tryout" value="0">
+                        <input type="checkbox" name="is_tryout" value="1" @change="isTryout = $event.target.checked" {{ preg_match('/try\\s*out/i', $package->name) ? 'checked' : '' }}
+                            class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
+                        <span class="text-sm font-medium text-gray-700">Tandai sebagai paket Try Out</span>
                     </label>
                 </div>
             </div>
