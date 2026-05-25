@@ -37,12 +37,12 @@
 {{-- ═══ METRIC CARDS ══════════════════════════════════ --}}
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
   @foreach([
-    ['📝', 'Soal Dikerjakan',   number_format($totalSoal), 'text-blue-600',   'bg-blue-50'],
-    ['📊', 'Rata-rata Skor',    round($avgScore) . '%',    'text-green-600',  'bg-green-50'],
-    ['⏱️', 'Try Out Selesai',   $totalTryout,              'text-purple-600', 'bg-purple-50'],
-    ['🔥', 'Hari Streak',       $streak . ' hari',         'text-orange-500', 'bg-orange-50'],
+    ['📝', 'Soal Dikerjakan',   number_format($totalSoal), 'text-blue-600 dark:text-blue-400',   'bg-blue-50 dark:bg-blue-900/30'],
+    ['📊', 'Rata-rata Skor',    round($avgScore) . '%',    'text-green-600 dark:text-green-400',  'bg-green-50 dark:bg-green-900/30'],
+    ['⏱️', 'Try Out Selesai',   $totalTryout,              'text-purple-600 dark:text-purple-400', 'bg-purple-50 dark:bg-purple-900/30'],
+    ['🔥', 'Hari Streak',       $streak . ' hari',         'text-orange-500 dark:text-orange-400', 'bg-orange-50 dark:bg-orange-900/30'],
   ] as [$icon, $label, $value, $textColor, $bgColor])
-  <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition">
     <div class="w-10 h-10 {{ $bgColor }} rounded-xl flex items-center justify-center text-xl mb-3">
       {{ $icon }}
     </div>
@@ -56,10 +56,10 @@
 <div class="grid md:grid-cols-3 gap-6 mb-6">
 
   {{-- Progress mingguan --}}
-  <div class="md:col-span-2 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+  <div class="md:col-span-2 bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
     <div class="flex items-center justify-between mb-5">
       <div>
-        <h3 class="font-bold text-gray-800" style="font-family:'Plus Jakarta Sans',sans-serif;">
+        <h3 class="font-bold text-gray-800 dark:text-gray-100" style="font-family:'Plus Jakarta Sans',sans-serif;">
           Progress 7 Hari Terakhir
         </h3>
         <p class="text-gray-400 text-xs mt-0.5">Rata-rata skor harian kamu</p>
@@ -146,19 +146,19 @@
 
 {{-- ═══ REKOMENDASI AI ════════════════════════════════ --}}
 @if(count($weakTopics) > 0)
-<div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">
+<div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-5 mb-6">
   <div class="flex items-center gap-2 mb-4">
     <span class="text-xl">🎯</span>
-    <h3 class="font-bold text-amber-800" style="font-family:'Plus Jakarta Sans',sans-serif;">
+    <h3 class="font-bold text-amber-800 dark:text-amber-500" style="font-family:'Plus Jakarta Sans',sans-serif;">
       Fokus Belajar Hari Ini — Rekomendasi AI
     </h3>
   </div>
   <div class="grid md:grid-cols-3 gap-3">
     @foreach(array_slice($weakTopics, 0, 3) as $topic)
-    <div class="bg-white rounded-xl p-4 border border-amber-100">
+    <div class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-amber-100 dark:border-gray-700">
       <div class="flex items-center gap-2 mb-2">
         <span class="text-red-500">📌</span>
-        <span class="font-semibold text-gray-800 text-sm">{{ $topic }}</span>
+        <span class="font-semibold text-gray-800 dark:text-gray-100 text-sm">{{ $topic }}</span>
       </div>
       <div class="text-xs text-gray-500">Perlu lebih banyak latihan di topik ini</div>
       <a href="#" class="mt-2 inline-block text-xs text-blue-600 font-semibold hover:underline">
@@ -169,20 +169,20 @@
   </div>
 </div>
 @else
-<div class="bg-green-50 border border-green-200 rounded-2xl p-5 mb-6 flex items-center gap-4">
+<div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-5 mb-6 flex items-center gap-4">
   <div class="text-3xl">🎉</div>
   <div>
-    <div class="font-bold text-green-800">Belum ada data analisis</div>
-    <div class="text-green-600 text-sm">Selesaikan latihan pertamamu untuk mendapatkan rekomendasi AI personal!</div>
+    <div class="font-bold text-green-800 dark:text-green-500">Belum ada data analisis</div>
+    <div class="text-green-600 dark:text-green-400 text-sm">Selesaikan latihan pertamamu untuk mendapatkan rekomendasi AI personal!</div>
   </div>
 </div>
 @endif
 
 {{-- ═══ PAKET LATIHAN ══════════════════════════════════ --}}
-<div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+<div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
   <div class="flex items-center justify-between mb-5">
     <div>
-      <h3 class="font-bold text-gray-800 text-lg" style="font-family:'Plus Jakarta Sans',sans-serif;">
+      <h3 class="font-bold text-gray-800 dark:text-gray-100 text-lg" style="font-family:'Plus Jakarta Sans',sans-serif;">
         Paket Latihan Tersedia
       </h3>
       <p class="text-gray-400 text-xs mt-0.5">Untuk kelas {{ auth()->user()->class_level }}</p>
@@ -200,18 +200,18 @@
   @else
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
     @foreach($packages as $pkg)
-    <div class="border border-gray-100 rounded-2xl p-5 hover:border-blue-300 hover:shadow-md transition group">
+    <div class="border border-gray-100 dark:border-gray-700 rounded-2xl p-5 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-md transition group">
       {{-- Header --}}
       <div class="flex items-start justify-between mb-3">
-        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-xl">📝</div>
+        <div class="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-xl">📝</div>
         <span class="text-xs font-bold px-2.5 py-1 rounded-full
-          {{ $pkg->type === 'premium' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700' }}">
+          {{ $pkg->type === 'premium' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-500' : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-500' }}">
           {{ $pkg->type === 'premium' ? '⭐ PREMIUM' : '✓ FREE' }}
         </span>
       </div>
 
       {{-- Info --}}
-      <h4 class="font-bold text-gray-800 text-sm mb-1 group-hover:text-blue-600 transition line-clamp-2">
+      <h4 class="font-bold text-gray-800 dark:text-gray-100 text-sm mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition line-clamp-2">
         {{ $pkg->name }}
       </h4>
       <p class="text-gray-400 text-xs mb-3 line-clamp-2">
@@ -231,7 +231,7 @@
       {{-- CTA --}}
       @if($pkg->type === 'premium' && !auth()->user()->isPremium())
       <button
-        class="w-full bg-gray-100 text-gray-400 text-sm font-semibold py-2.5 rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
+        class="w-full bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 text-sm font-semibold py-2.5 rounded-xl cursor-not-allowed flex items-center justify-center gap-2">
         🔒 Khusus Premium
       </button>
       @else

@@ -80,15 +80,26 @@ class ReportController extends Controller
             ->latest()
             ->get();
 
+        // Blade view membutuhkan variabel $avgScore, tapi di controller yang tersedia adalah $averageScore.
+        // Samakan nama agar tidak error: Undefined variable $avgScore.
+        $avgScore = $averageScore;
+
         return view('laporan.index', compact(
             'period',
             'resultsHistory',
+            'avgScore',
             'averageScore',
             'totalExercises',
             'totalSessions',
             'totalAnswered',
             'weakTopics',
-            'subjectAverages'
+            'subjectAverages',
+            'totalCorrect',
+            'totalWrong',
+            'totalEmpty',
+            'timeSpentLabel',
+            'trendLabels',
+            'trendScores'
         ));
     }
 }

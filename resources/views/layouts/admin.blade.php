@@ -6,6 +6,17 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Admin') — SMARTKA Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+    // Prevent Flash of Unstyled Content (FOUC)
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+  </script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -15,7 +26,7 @@
     .admin-link:hover  { background:#1e3a5f; }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen" x-data="{ sidebarOpen: false }">
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen text-gray-800 dark:text-gray-100 transition-colors duration-200" x-data="{ sidebarOpen: false }">
 
   {{-- SIDEBAR --}}
   <aside class="fixed top-0 left-0 h-full w-60 bg-gray-900 z-40 flex flex-col
@@ -121,11 +132,11 @@
   <div class="md:ml-60 min-h-screen flex flex-col">
 
     {{-- Topbar --}}
-    <header class="sticky top-0 z-20 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
+    <header class="sticky top-0 z-20 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between shadow-sm transition-colors">
       <div class="flex items-center gap-4">
-        <button class="md:hidden" @click="sidebarOpen = true">☰</button>
+        <button class="md:hidden text-gray-800 dark:text-gray-200" @click="sidebarOpen = true">☰</button>
         <div>
-          <h1 class="font-bold text-gray-800" style="font-family:'Plus Jakarta Sans',sans-serif;">
+          <h1 class="font-bold text-gray-800 dark:text-gray-100" style="font-family:'Plus Jakarta Sans',sans-serif;">
             @yield('page-title', 'Dashboard')
           </h1>
           <p class="text-gray-400 text-xs">@yield('page-subtitle', '')</p>
@@ -153,7 +164,7 @@
       @yield('content')
     </main>
 
-    <footer class="px-6 py-3 border-t border-gray-200 text-xs text-gray-400 text-center">
+    <footer class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-400 dark:text-gray-500 text-center transition-colors">
       © {{ date('Y') }} SMARTKA Admin Panel
     </footer>
   </div>

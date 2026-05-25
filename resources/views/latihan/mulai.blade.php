@@ -5,17 +5,17 @@
 <div class="mb-6">
     <div class="flex justify-between items-center mb-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800" style="font-family:'Plus Jakarta Sans',sans-serif">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100" style="font-family:'Plus Jakarta Sans',sans-serif">
                 {{ $package->name }}
             </h1>
-            <p class="text-gray-500 text-sm">Kerjakan dengan jujur dan teliti!</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Kerjakan dengan jujur dan teliti!</p>
         </div>
         @if($package->duration_minutes > 0)
-        <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl font-bold border border-blue-200">
+        <div class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-4 py-2 rounded-xl font-bold border border-blue-200 dark:border-blue-800">
             Sisa Waktu: <span id="timerDisplay">--:--</span>
         </div>
         @else
-        <div class="bg-gray-50 text-gray-600 px-4 py-2 rounded-xl font-semibold border border-gray-100">
+        <div class="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-4 py-2 rounded-xl font-semibold border border-gray-100 dark:border-gray-700">
             Tanpa Waktu
         </div>
         @endif
@@ -27,19 +27,19 @@
     <!-- Main Content: Active Question -->
     <div class="lg:col-span-3">
         <template x-for="(question, index) in questions" :key="question.id">
-            <div x-show="currentIndex === index" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 lg:p-8">
+            <div x-show="currentIndex === index" class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6 lg:p-8">
                 
                 <div class="flex justify-between items-start mb-6">
-                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">
+                    <span class="bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 text-xs font-bold px-3 py-1 rounded-full">
                         Soal No. <span x-text="index + 1"></span>
                     </span>
-                    <span class="text-xs font-semibold text-gray-400 bg-gray-50 px-2 py-1 rounded border">
+                    <span class="text-xs font-semibold text-gray-400 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-2 py-1 rounded border dark:border-gray-600">
                         <span x-text="question.type === 'multiple_choice' ? 'Pilihan Ganda' : 'Isian Singkat / Essay'"></span>
                     </span>
                 </div>
 
                 <!-- Question Text -->
-                <div class="prose max-w-none text-gray-800 mb-8" x-html="question.question_text"></div>
+                <div class="prose max-w-none text-gray-800 dark:text-gray-100 mb-8" x-html="question.question_text"></div>
 
                 <!-- Question Image (if any) -->
                 <template x-if="question.question_image">
@@ -54,14 +54,14 @@
                             <template x-for="optionKey in ['a', 'b', 'c', 'd', 'e']" :key="optionKey">
                                 <label x-show="question['option_' + optionKey]" 
                                     class="flex items-center p-4 border rounded-xl cursor-pointer transition-all"
-                                    :class="getAnswer(question.id) === optionKey ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'">
+                                    :class="getAnswer(question.id) === optionKey ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30 dark:border-blue-500' : 'border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'">
                                     
-                                    <input type="radio" :name="'question_' + question.id" :value="optionKey" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                                    <input type="radio" :name="'question_' + question.id" :value="optionKey" class="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-blue-500"
                                         :checked="getAnswer(question.id) === optionKey"
                                         @change="saveAnswer(question.id, optionKey)">
                                     
-                                    <span class="ml-3 font-semibold text-gray-700 uppercase" x-text="optionKey + '.'"></span>
-                                    <span class="ml-2 text-gray-600" x-html="question['option_' + optionKey]"></span>
+                                    <span class="ml-3 font-semibold text-gray-700 dark:text-gray-300 uppercase" x-text="optionKey + '.'"></span>
+                                    <span class="ml-2 text-gray-600 dark:text-gray-400" x-html="question['option_' + optionKey]"></span>
                                 </label>
                             </template>
                         </div>
@@ -71,7 +71,7 @@
                     <template x-if="question.type === 'short_answer'">
                         <div>
                             <textarea 
-                                class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 min-h-[150px] transition-all"
+                                class="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 min-h-[150px] transition-all"
                                 placeholder="Ketik jawabanmu di sini..."
                                 :value="getAnswer(question.id)"
                                 @change="saveAnswer(question.id, $event.target.value)"
@@ -82,9 +82,9 @@
                 </div>
 
                 <!-- Footer Navigation -->
-                <div class="mt-10 flex justify-between items-center pt-6 border-t border-gray-100">
+                <div class="mt-10 flex justify-between items-center pt-6 border-t border-gray-100 dark:border-gray-700">
                     <button @click="prevQuestion" :disabled="currentIndex === 0" 
-                        class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-all font-medium">
+                        class="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-all font-medium">
                         &larr; Sebelumnya
                     </button>
                     
@@ -109,8 +109,8 @@
 
     <!-- Sidebar: Navigasi Soal -->
     <div class="lg:col-span-1">
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sticky top-24">
-            <h3 class="font-bold text-gray-800 mb-4" style="font-family:'Plus Jakarta Sans',sans-serif">Navigasi Soal</h3>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 sticky top-24">
+            <h3 class="font-bold text-gray-800 dark:text-gray-100 mb-4" style="font-family:'Plus Jakarta Sans',sans-serif">Navigasi Soal</h3>
             
             <div class="grid grid-cols-5 gap-2 mb-6">
                 <template x-for="(question, index) in questions" :key="question.id">
@@ -118,15 +118,15 @@
                         class="w-full aspect-square flex items-center justify-center rounded-lg font-bold text-sm transition-all"
                         :class="{
                             'bg-blue-600 text-white shadow-md': currentIndex === index,
-                            'bg-green-100 text-green-700 border border-green-200': currentIndex !== index && getAnswer(question.id) !== null && getAnswer(question.id) !== '',
-                            'bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100': currentIndex !== index && (getAnswer(question.id) === null || getAnswer(question.id) === '')
+                            'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-500 border border-green-200 dark:border-green-800': currentIndex !== index && getAnswer(question.id) !== null && getAnswer(question.id) !== '',
+                            'bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600': currentIndex !== index && (getAnswer(question.id) === null || getAnswer(question.id) === '')
                         }">
                         <span x-text="index + 1"></span>
                     </button>
                 </template>
             </div>
 
-            <button @click="finishTest" class="w-full bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 py-3 rounded-xl font-bold transition-all">
+            <button @click="finishTest" class="w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-200 dark:border-red-800 py-3 rounded-xl font-bold transition-all">
                 Akhiri Latihan
             </button>
         </div>
@@ -136,17 +136,17 @@
 
 <!-- Modal Konfirmasi -->
 <div id="finishModal" class="hidden fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
         <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">🏁</div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Yakin Ingin Mengakhiri?</h3>
-            <p class="text-gray-500">Pastikan semua soal sudah terjawab dengan benar. Jawaban tidak dapat diubah setelah latihan diakhiri.</p>
+            <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">🏁</div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">Yakin Ingin Mengakhiri?</h3>
+            <p class="text-gray-500 dark:text-gray-400">Pastikan semua soal sudah terjawab dengan benar. Jawaban tidak dapat diubah setelah latihan diakhiri.</p>
         </div>
         
         <form action="{{ route('latihan.finish', $session->id) }}" method="POST" class="flex gap-4">
             @csrf
             <button type="button" onclick="document.getElementById('finishModal').classList.add('hidden')" 
-                class="flex-1 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50">
+                class="flex-1 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-700">
                 Batal
             </button>
             <button type="submit" 

@@ -9,8 +9,8 @@
   x-init="init()">
 
   {{-- ── SIDEBAR RIWAYAT ─────────────────────────── --}}
-  <div class="w-64 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col hidden md:flex">
-    <div class="p-4 border-b border-gray-100">
+  <div class="w-64 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col hidden md:flex">
+    <div class="p-4 border-b border-gray-100 dark:border-gray-700">
       <button @click="newChat()"
         class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2">
         <span>✏️</span> Chat Baru
@@ -19,14 +19,14 @@
 
     {{-- Kuota (free user) --}}
     @if(!auth()->user()->isPremium())
-    <div class="px-4 py-3 border-b border-gray-100 bg-amber-50">
-      <div class="flex justify-between text-xs text-gray-600 mb-1.5">
+    <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700 bg-amber-50 dark:bg-amber-900/20">
+      <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1.5">
         <span>Kuota hari ini</span>
         <span class="font-bold {{ $aiQuota <= 1 ? 'text-red-500' : 'text-green-600' }}">
           {{ $aiQuota }}/5
         </span>
       </div>
-      <div class="w-full bg-gray-200 rounded-full h-1.5">
+      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
         <div class="h-1.5 rounded-full {{ $aiQuota <= 1 ? 'bg-red-500' : 'bg-green-500' }}"
           style="width: {{ ($aiQuota / 5) * 100 }}%"></div>
       </div>
@@ -37,8 +37,8 @@
       @endif
     </div>
     @else
-    <div class="px-4 py-2 border-b border-gray-100 bg-green-50">
-      <div class="text-xs text-green-600 flex items-center gap-1 font-semibold">
+    <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-700 bg-green-50 dark:bg-green-900/20">
+      <div class="text-xs text-green-600 dark:text-green-500 flex items-center gap-1 font-semibold">
         <span>✓</span> Premium — pertanyaan tanpa batas
       </div>
     </div>
@@ -56,9 +56,9 @@
       </template>
       <template x-for="s in sessions" :key="s.id">
         <button @click="loadSession(s.id)"
-          class="w-full text-left px-3 py-2.5 hover:bg-gray-50 transition rounded-lg mx-1 group"
-          :class="activeSessionId === s.id ? 'bg-blue-50' : ''">
-          <div class="text-sm font-medium text-gray-700 truncate group-hover:text-blue-600"
+          class="w-full text-left px-3 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition rounded-lg mx-1 group"
+          :class="activeSessionId === s.id ? 'bg-blue-50 dark:bg-gray-700' : ''">
+          <div class="text-sm font-medium text-gray-700 dark:text-gray-300 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400"
             :class="activeSessionId === s.id ? 'text-blue-600' : ''"
             x-text="s.title || 'Chat tanpa judul'"></div>
           <div class="text-xs text-gray-400 mt-0.5" x-text="s.message_count + ' pesan'"></div>
@@ -68,7 +68,7 @@
   </div>
 
   {{-- ── AREA CHAT UTAMA ──────────────────────────── --}}
-  <div class="flex-1 bg-white rounded-2xl border border-gray-100 shadow-sm flex flex-col overflow-hidden">
+  <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col overflow-hidden">
 
     {{-- Header chat --}}
     <div class="bg-blue-600 px-5 py-4 flex items-center gap-3 flex-shrink-0">
@@ -91,7 +91,7 @@
 
     {{-- Progress bar kuota tipis --}}
     @if(!auth()->user()->isPremium())
-    <div class="h-0.5 bg-gray-100">
+    <div class="h-0.5 bg-gray-100 dark:bg-gray-700">
       <div class="h-full bg-green-500 transition-all"
         :style="'width: ' + (quota / 5 * 100) + '%'"
         :class="quota <= 1 ? 'bg-red-500' : 'bg-green-500'">
@@ -107,7 +107,7 @@
       <template x-if="messages.length === 0">
         <div class="flex flex-col items-center justify-center h-full py-10 text-center">
           <div class="text-6xl mb-4">🤖</div>
-          <h3 class="text-lg font-bold text-gray-800 mb-2"
+          <h3 class="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2"
             style="font-family:'Plus Jakarta Sans',sans-serif;">
             Halo, {{ auth()->user()->name }}! 👋
           </h3>
@@ -125,7 +125,7 @@
               '💡 Tips belajar efektif',
             ] as $chip)
             <button @click="sendQuickMessage('{{ $chip }}')"
-              class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-sm px-4 py-2 rounded-full transition border border-blue-200">
+              class="bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-400 text-sm px-4 py-2 rounded-full transition border border-blue-200 dark:border-blue-800">
               {{ $chip }}
             </button>
             @endforeach
@@ -149,7 +149,7 @@
                 </div>
                 <div class="text-right text-xs text-gray-400 mt-1" x-text="msg.time"></div>
               </div>
-              <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-sm flex-shrink-0">
+              <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center text-sm flex-shrink-0">
                 🧑‍🎓
               </div>
             </div>
@@ -162,7 +162,7 @@
                 🤖
               </div>
               <div class="max-w-lg flex-1">
-                <div class="bg-gray-100 text-gray-800 text-sm rounded-2xl rounded-tl-sm px-4 py-3 leading-relaxed prose prose-sm max-w-none"
+                <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm rounded-2xl rounded-tl-sm px-4 py-3 leading-relaxed prose prose-sm max-w-none"
                   x-html="msg.html || msg.content">
                 </div>
                 {{-- Action buttons --}}
@@ -193,7 +193,7 @@
       <template x-if="loading">
         <div class="flex gap-3">
           <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm">🤖</div>
-          <div class="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5">
+          <div class="bg-gray-100 dark:bg-gray-700 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5">
             <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
             <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0.15s"></div>
             <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay:0.3s"></div>
@@ -205,11 +205,11 @@
       <template x-if="limitReached">
         <div class="flex gap-3">
           <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-sm">🤖</div>
-          <div class="bg-amber-50 border border-amber-200 rounded-2xl rounded-tl-sm px-4 py-4 max-w-sm">
-            <div class="font-bold text-amber-800 text-sm mb-1">
+          <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl rounded-tl-sm px-4 py-4 max-w-sm">
+            <div class="font-bold text-amber-800 dark:text-amber-500 text-sm mb-1">
               Kuota harian habis 😢
             </div>
-            <p class="text-amber-700 text-xs mb-3">
+            <p class="text-amber-700 dark:text-amber-400 text-xs mb-3">
               Kamu sudah menggunakan 5 pertanyaan gratis hari ini.
               Upgrade ke Premium untuk tanya tanpa batas!
             </p>
@@ -228,7 +228,7 @@
 
     {{-- Preview gambar sebelum kirim --}}
     <template x-if="imagePreview">
-      <div class="px-5 py-2 border-t border-gray-100 flex items-center gap-3">
+      <div class="px-5 py-2 border-t border-gray-100 dark:border-gray-700 flex items-center gap-3">
         <img :src="imagePreview" class="h-16 rounded-lg object-cover" alt="Preview">
         <div class="text-xs text-gray-500 flex-1">Gambar siap dikirim</div>
         <button @click="removeImage()" class="text-red-500 hover:text-red-700 text-sm">✕ Hapus</button>
@@ -236,10 +236,10 @@
     </template>
 
     {{-- Input bar --}}
-    <div class="border-t border-gray-100 p-4 flex-shrink-0">
+    <div class="border-t border-gray-100 dark:border-gray-700 p-4 flex-shrink-0">
       <div class="flex items-end gap-3">
         {{-- Upload gambar --}}
-        <label class="flex-shrink-0 w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center cursor-pointer transition text-gray-500"
+        <label class="flex-shrink-0 w-10 h-10 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl flex items-center justify-center cursor-pointer transition text-gray-500 dark:text-gray-400"
           :class="quota <= 0 && !isPremium ? 'opacity-50 cursor-not-allowed' : ''">
           📷
           <input type="file" accept="image/*" class="hidden" x-ref="fileInput"
@@ -258,7 +258,7 @@
             placeholder="Tanya apapun tentang pelajaranmu... (Enter = kirim, Shift+Enter = baris baru)"
             :disabled="loading || (quota <= 0 && !isPremium)"
             rows="1"
-            class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition disabled:bg-gray-50 disabled:text-gray-400"
+            class="w-full border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition disabled:bg-gray-50 dark:disabled:bg-gray-900 disabled:text-gray-400 dark:disabled:text-gray-600"
             style="max-height: 120px; overflow-y: auto;"
           ></textarea>
         </div>

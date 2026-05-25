@@ -29,14 +29,14 @@
 
 {{-- Toggle billing period --}}
 <div class="flex justify-center mb-8" x-data="{ yearly: false }">
-  <div class="bg-gray-100 rounded-2xl p-1 flex items-center gap-1">
+  <div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-1 flex items-center gap-1">
     <button @click="yearly = false"
-      :class="!yearly ? 'bg-white shadow-sm text-blue-600 font-semibold' : 'text-gray-500'"
+      :class="!yearly ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 font-semibold' : 'text-gray-500 dark:text-gray-400'"
       class="px-5 py-2.5 rounded-xl text-sm transition">
       Bulanan
     </button>
     <button @click="yearly = true"
-      :class="yearly ? 'bg-white shadow-sm text-blue-600 font-semibold' : 'text-gray-500'"
+      :class="yearly ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 font-semibold' : 'text-gray-500 dark:text-gray-400'"
       class="px-5 py-2.5 rounded-xl text-sm transition flex items-center gap-2">
       Tahunan
       <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-bold">Hemat 26%</span>
@@ -51,14 +51,14 @@
 
   {{-- Toggle ulang di sini karena scope --}}
   <div class="flex justify-center mb-8">
-    <div class="bg-gray-100 rounded-2xl p-1 flex items-center gap-1">
+    <div class="bg-gray-100 dark:bg-gray-700 rounded-2xl p-1 flex items-center gap-1">
       <button @click="yearly = false"
-        :class="!yearly ? 'bg-white shadow-sm text-blue-600 font-semibold' : 'text-gray-500'"
+        :class="!yearly ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 font-semibold' : 'text-gray-500 dark:text-gray-400'"
         class="px-5 py-2.5 rounded-xl text-sm transition">
         Bulanan
       </button>
       <button @click="yearly = true"
-        :class="yearly ? 'bg-white shadow-sm text-blue-600 font-semibold' : 'text-gray-500'"
+        :class="yearly ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600 font-semibold' : 'text-gray-500 dark:text-gray-400'"
         class="px-5 py-2.5 rounded-xl text-sm transition flex items-center gap-2">
         Tahunan
         <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-bold">Hemat 26%</span>
@@ -70,21 +70,21 @@
   <div class="grid md:grid-cols-3 gap-6 items-start">
 
     {{-- FREE --}}
-    <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 shadow-sm">
-      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Free</div>
-      <div class="text-4xl font-extrabold text-gray-800 mb-1">Rp 0</div>
-      <div class="text-gray-400 text-sm mb-6">Selamanya gratis</div>
+    <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border-2 border-gray-200 dark:border-gray-700 shadow-sm">
+      <div class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">Free</div>
+      <div class="text-4xl font-extrabold text-gray-800 dark:text-white mb-1">Rp 0</div>
+      <div class="text-gray-400 dark:text-gray-500 text-sm mb-6">Selamanya gratis</div>
       <ul class="space-y-3 mb-8">
         @foreach($plans['free']['features'] as $f)
-        <li class="flex items-center gap-2.5 text-sm {{ $f['ok'] ? 'text-gray-700' : 'text-gray-300' }}">
-          <span class="{{ $f['ok'] ? 'text-green-500' : 'text-gray-300' }} text-base">
+        <li class="flex items-center gap-2.5 text-sm {{ $f['ok'] ? 'text-gray-700 dark:text-gray-300' : 'text-gray-300 dark:text-gray-600' }}">
+          <span class="{{ $f['ok'] ? 'text-green-500' : 'text-gray-300 dark:text-gray-600' }} text-base">
             {{ $f['ok'] ? '✓' : '✗' }}
           </span>
           {{ $f['text'] }}
         </li>
         @endforeach
       </ul>
-      <div class="block text-center border-2 border-gray-200 text-gray-400 font-semibold py-3 rounded-xl text-sm">
+      <div class="block text-center border-2 border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 font-semibold py-3 rounded-xl text-sm">
         Paket Saat Ini
       </div>
     </div>
@@ -139,40 +139,40 @@
     </div>
 
     {{-- PREMIUM PLUS --}}
-    <div class="bg-white rounded-3xl p-8 border-2 border-yellow-300 shadow-lg">
-      <div class="text-xs font-bold text-yellow-600 uppercase tracking-widest mb-3">Premium Plus</div>
+    <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 border-2 border-yellow-300 dark:border-yellow-600 shadow-lg">
+      <div class="text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-widest mb-3">Premium Plus</div>
 
       <div x-show="!yearly">
-        <div class="text-4xl font-extrabold text-gray-800 mb-1">Rp 129K</div>
-        <div class="text-gray-400 text-sm mb-6">per bulan</div>
+        <div class="text-4xl font-extrabold text-gray-800 dark:text-white mb-1">Rp 129K</div>
+        <div class="text-gray-400 dark:text-gray-500 text-sm mb-6">per bulan</div>
       </div>
       <div x-show="yearly">
-        <div class="text-4xl font-extrabold text-gray-800 mb-1">Rp 1.199K</div>
-        <div class="text-gray-400 text-sm mb-1">per tahun</div>
-        <div class="text-green-600 text-xs mb-5">Hemat Rp 349K dari harga normal!</div>
+        <div class="text-4xl font-extrabold text-gray-800 dark:text-white mb-1">Rp 1.199K</div>
+        <div class="text-gray-400 dark:text-gray-500 text-sm mb-1">per tahun</div>
+        <div class="text-green-600 dark:text-green-400 text-xs mb-5">Hemat Rp 349K dari harga normal!</div>
       </div>
 
       <ul class="space-y-3 mb-8">
         @foreach($plans['premium_plus']['features'] as $f)
-        <li class="flex items-center gap-2.5 text-sm text-gray-700">
-          <span class="text-yellow-500 text-base">★</span>
+        <li class="flex items-center gap-2.5 text-sm text-gray-700 dark:text-gray-300">
+          <span class="text-yellow-500 dark:text-yellow-400 text-base">★</span>
           {{ $f['text'] }}
         </li>
         @endforeach
       </ul>
 
       @if($user->subscription_status === 'premium_plus')
-      <div class="block text-center border-2 border-yellow-300 text-yellow-600 font-semibold py-3 rounded-xl text-sm">
+      <div class="block text-center border-2 border-yellow-300 dark:border-yellow-600 text-yellow-600 dark:text-yellow-400 font-semibold py-3 rounded-xl text-sm">
         ✓ Paket Aktif
       </div>
       @else
       <div>
         <a x-show="!yearly" href="{{ route('checkout', 'premium_plus') }}"
-          class="block text-center border-2 border-yellow-400 text-yellow-700 font-bold py-3 rounded-xl hover:bg-yellow-50 transition text-sm">
+          class="block text-center border-2 border-yellow-400 dark:border-yellow-500 text-yellow-700 dark:text-yellow-400 font-bold py-3 rounded-xl hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition text-sm">
           Pilih Premium Plus →
         </a>
         <a x-show="yearly" href="{{ route('checkout', 'premium_plus') }}?period=yearly"
-          class="block text-center border-2 border-yellow-400 text-yellow-700 font-bold py-3 rounded-xl hover:bg-yellow-50 transition text-sm">
+          class="block text-center border-2 border-yellow-400 dark:border-yellow-500 text-yellow-700 dark:text-yellow-400 font-bold py-3 rounded-xl hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition text-sm">
           Pilih Plus (Tahunan) →
         </a>
       </div>
@@ -181,23 +181,23 @@
   </div>
 
   {{-- Comparison table --}}
-  <div class="mt-12 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-    <div class="px-6 py-4 border-b border-gray-100">
-      <h3 class="font-bold text-gray-800" style="font-family:'Plus Jakarta Sans',sans-serif;">
+  <div class="mt-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+      <h3 class="font-bold text-gray-800 dark:text-white" style="font-family:'Plus Jakarta Sans',sans-serif;">
         Perbandingan Lengkap Fitur
       </h3>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
-        <thead class="bg-gray-50">
+        <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>
-            <th class="text-left px-6 py-3 text-gray-500 font-medium">Fitur</th>
-            <th class="text-center px-4 py-3 text-gray-500 font-medium">Free</th>
-            <th class="text-center px-4 py-3 text-blue-600 font-bold">Premium</th>
-            <th class="text-center px-4 py-3 text-yellow-600 font-bold">Plus</th>
+            <th class="text-left px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Fitur</th>
+            <th class="text-center px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">Free</th>
+            <th class="text-center px-4 py-3 text-blue-600 dark:text-blue-400 font-bold">Premium</th>
+            <th class="text-center px-4 py-3 text-yellow-600 dark:text-yellow-400 font-bold">Plus</th>
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-50">
+        <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
           @foreach([
             ['Soal per hari',         '20',           '∞',  '∞'],
             ['Try out per bulan',     '1',            '∞',  '∞'],
@@ -209,15 +209,15 @@
             ['Konsultasi guru',       '✗',            '✗',  '2x/bln'],
             ['Prioritas dukungan',    'Standar',      '✓',  'VIP'],
           ] as [$feat, $free, $prem, $plus])
-          <tr class="hover:bg-gray-50/50">
-            <td class="px-6 py-3.5 text-gray-700 font-medium">{{ $feat }}</td>
-            <td class="text-center px-4 py-3.5 {{ $free === '✗' ? 'text-gray-300' : 'text-gray-600' }}">
+          <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/50">
+            <td class="px-6 py-3.5 text-gray-700 dark:text-gray-300 font-medium">{{ $feat }}</td>
+            <td class="text-center px-4 py-3.5 {{ $free === '✗' ? 'text-gray-300 dark:text-gray-600' : 'text-gray-600 dark:text-gray-400' }}">
               {{ $free }}
             </td>
-            <td class="text-center px-4 py-3.5 {{ $prem === '✗' ? 'text-gray-300' : 'text-green-600 font-semibold' }}">
+            <td class="text-center px-4 py-3.5 {{ $prem === '✗' ? 'text-gray-300 dark:text-gray-600' : 'text-green-600 dark:text-green-400 font-semibold' }}">
               {{ $prem }}
             </td>
-            <td class="text-center px-4 py-3.5 {{ $plus === '✗' ? 'text-gray-300' : 'text-yellow-600 font-semibold' }}">
+            <td class="text-center px-4 py-3.5 {{ $plus === '✗' ? 'text-gray-300 dark:text-gray-600' : 'text-yellow-600 dark:text-yellow-400 font-semibold' }}">
               {{ $plus }}
             </td>
           </tr>
@@ -229,7 +229,7 @@
 
   {{-- FAQ --}}
   <div class="mt-10 grid md:grid-cols-2 gap-4">
-    <h3 class="md:col-span-2 font-bold text-gray-800 text-lg mb-2"
+    <h3 class="md:col-span-2 font-bold text-gray-800 dark:text-white text-lg mb-2"
       style="font-family:'Plus Jakarta Sans',sans-serif;">
       Pertanyaan Umum
     </h3>
@@ -239,12 +239,12 @@
       ['Apakah soal diupdate?',             'Ya, tim kami rutin menambah soal-soal baru setiap minggu mengikuti kurikulum terbaru.'],
       ['Metode pembayaran apa saja?',       'Transfer bank (BCA/BNI/BRI/Mandiri), e-wallet (GoPay/OVO/DANA/ShopeePay), QRIS, dan kartu kredit/debit.'],
     ] as [$q, $a])
-    <div class="bg-white rounded-2xl p-5 border border-gray-100" x-data="{ open: false }">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700" x-data="{ open: false }">
       <button class="w-full flex items-center justify-between text-left" @click="open = !open">
-        <span class="font-semibold text-gray-800 text-sm">{{ $q }}</span>
-        <span class="text-gray-400 ml-3" x-text="open ? '−' : '+'"></span>
+        <span class="font-semibold text-gray-800 dark:text-white text-sm">{{ $q }}</span>
+        <span class="text-gray-400 dark:text-gray-500 ml-3" x-text="open ? '−' : '+'"></span>
       </button>
-      <div x-show="open" x-transition class="mt-3 text-gray-500 text-sm leading-relaxed">
+      <div x-show="open" x-transition class="mt-3 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
         {{ $a }}
       </div>
     </div>

@@ -6,6 +6,17 @@
   <title>@yield('title', 'SMARTKA') — Belajar Cerdas, Raih Prestasi Terbaik</title>
   <meta name="description" content="Platform latihan soal & try out untuk siswa kelas 6, 9, dan 12. Ribuan soal, analisis mendalam, dan bimbingan AI personal.">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+    // Prevent Flash of Unstyled Content (FOUC)
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+  </script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
@@ -56,7 +67,7 @@
     .fade-in-up { animation: fadeInUp 0.6s ease forwards; }
   </style>
 </head>
-<body class="bg-white overflow-x-hidden">
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 overflow-x-hidden transition-colors duration-200">
 
   @yield('content')
 

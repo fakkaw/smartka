@@ -2,125 +2,6 @@
 @section('title', 'Laporan Belajar')
 
 @section('content')
-<div class="mb-6 flex justify-between items-end">
-    <div>
-        <h1 class="text-2xl font-bold text-gray-800 mb-2" style="font-family:'Plus Jakarta Sans',sans-serif">Laporan Belajar</h1>
-        <p class="text-gray-500">Pantau perkembangan dan statistik belajarmu di sini.</p>
-    </div>
-</div>
-
-<!-- STATS CARDS -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div class="text-gray-400 text-sm font-semibold mb-1">Rata-rata Skor</div>
-        <div class="text-3xl font-bold text-gray-800">{{ $averageScore }}</div>
-    </div>
-    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div class="text-gray-400 text-sm font-semibold mb-1">Total Sesi Latihan</div>
-        <div class="text-3xl font-bold text-blue-600">{{ $totalExercises }}</div>
-    </div>
-    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div class="text-gray-400 text-sm font-semibold mb-1">Soal Dijawab</div>
-        <div class="text-3xl font-bold text-green-600">{{ $totalAnswered }}</div>
-    </div>
-    <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-        <div class="text-gray-400 text-sm font-semibold mb-1">Topik Lemah</div>
-        <div class="text-3xl font-bold text-red-500">{{ count($weakTopics) }}</div>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <!-- SUBJECT AVERAGES -->
-    <div class="lg:col-span-1 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-        <h3 class="font-bold text-gray-800 mb-6" style="font-family:'Plus Jakarta Sans',sans-serif">Rata-rata per Mata Pelajaran</h3>
-        @if(empty($subjectAverages))
-            <div class="flex flex-col items-center justify-center py-6 text-center">
-                <span class="text-4xl mb-2">📉</span>
-                <p class="text-gray-400 text-sm">Belum ada data nilai mata pelajaran.</p>
-            </div>
-        @else
-            <div class="space-y-5">
-                @foreach($subjectAverages as $subject => $avg)
-                <div>
-                    <div class="flex justify-between text-sm mb-2">
-                        <span class="font-semibold text-gray-700">{{ $subject }}</span>
-                        <span class="font-bold text-gray-800">{{ $avg }}%</span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                        <div class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: {{ $avg }}%"></div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        @endif
-        
-        <!-- WEAK TOPICS -->
-        <h3 class="font-bold text-gray-800 mb-4 mt-8 pt-6 border-t border-gray-100" style="font-family:'Plus Jakarta Sans',sans-serif">Fokus Perbaikan</h3>
-        @if(empty($weakTopics))
-            <p class="text-gray-400 text-sm py-2">Belum ada topik yang terdeteksi lemah. Terus tingkatkan belajarmu!</p>
-        @else
-            <div class="flex flex-wrap gap-2">
-                @foreach($weakTopics as $topic)
-                    <span class="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-semibold rounded-lg border border-red-100 shadow-sm">{{ $topic }}</span>
-                @endforeach
-            </div>
-        @endif
-    </div>
-
-    <!-- HISTORY TABLE -->
-    <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-        <h3 class="font-bold text-gray-800 mb-6" style="font-family:'Plus Jakarta Sans',sans-serif">Riwayat Latihan Terakhir</h3>
-        
-        @if($resultsHistory->isEmpty())
-            <div class="text-center py-10 bg-gray-50 rounded-xl border border-gray-100 border-dashed">
-                <span class="text-4xl">📭</span>
-                <p class="text-gray-500 mt-3 font-medium text-sm">Kamu belum menyelesaikan latihan apa pun.</p>
-                <a href="{{ route('latihan.index') }}" class="inline-block mt-4 text-xs font-bold bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Mulai Latihan Pertama</a>
-            </div>
-        @else
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-gray-100 text-gray-400 text-xs uppercase tracking-wider">
-                            <th class="py-3 px-4 font-semibold">Tanggal</th>
-                            <th class="py-3 px-4 font-semibold">Paket Soal</th>
-                            <th class="py-3 px-4 font-semibold text-center">Skor Akhir</th>
-                            <th class="py-3 px-4 font-semibold text-right">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-sm">
-                        @foreach($resultsHistory as $res)
-                        <tr class="border-b border-gray-50 hover:bg-blue-50 transition-colors group">
-                            <td class="py-4 px-4 text-gray-500">{{ $res->created_at->translatedFormat('d M Y, H:i') }}</td>
-                            <td class="py-4 px-4 font-medium text-gray-800">
-                                {{ $res->session->testPackage->name ?? 'Paket Terhapus' }}
-                                <div class="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                                    <span>⏱️</span> Waktu: {{ round($res->session->time_spent_seconds / 60) }} menit
-                                </div>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-flex items-center justify-center min-w-[3rem] px-2 py-1 rounded-md font-bold text-xs 
-                                    {{ $res->total_score >= 75 ? 'bg-green-100 text-green-700 border border-green-200' : ($res->total_score >= 50 ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' : 'bg-red-100 text-red-700 border border-red-200') }}">
-                                    {{ $res->total_score }}
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 text-right">
-                                <a href="{{ route('latihan.hasil', $res->session_id) }}" class="inline-flex items-center justify-center text-blue-600 hover:text-white hover:bg-blue-600 font-semibold text-xs transition border border-transparent hover:border-blue-600 px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100">
-                                    Detail &rarr;
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @endif
-    </div>
-</div>
-@section('page-title', 'Laporan Belajar')
-@section('page-subtitle', 'Analisis perkembangan dan performa belajarmu secara mendalam.')
-
-@section('content')
 <div class="space-y-6" x-data="{
     period: '{{ $period }}',
     changePeriod(val) {
@@ -129,14 +10,14 @@
 }">
 
   {{-- ── FILTER PERIODE WAKTU ────────────────────────── --}}
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm">
     <div>
-      <h2 class="text-lg font-bold text-gray-800">Periode Laporan</h2>
-      <p class="text-xs text-gray-400">Pilih periode analisis untuk melihat data perkembangan belajarmu.</p>
+      <h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">Periode Laporan</h2>
+      <p class="text-xs text-gray-400 dark:text-gray-400">Pilih periode analisis untuk melihat data perkembangan belajarmu.</p>
     </div>
     <div class="relative w-full sm:w-auto">
       <select x-model="period" @change="changePeriod($event.target.value)"
-        class="w-full sm:w-48 appearance-none bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-gray-700 cursor-pointer">
+        class="w-full sm:w-48 appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-gray-700 dark:text-gray-200 cursor-pointer">
         <option value="all">📊 Semua Waktu</option>
         <option value="week">📅 7 Hari Terakhir</option>
         <option value="month">📆 30 Hari Terakhir</option>
@@ -148,10 +29,10 @@
 
   @if($totalSessions === 0)
     {{-- ── EMPTY STATE ──────────────────────────────── --}}
-    <div class="bg-white rounded-2xl border border-gray-100 p-12 shadow-sm text-center max-w-xl mx-auto flex flex-col items-center">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-12 shadow-sm text-center max-w-xl mx-auto flex flex-col items-center">
       <div class="text-7xl mb-6 select-none animate-bounce">📈</div>
-      <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Riwayat Belajar</h3>
-      <p class="text-gray-500 text-sm max-w-sm mb-8">
+      <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">Belum Ada Riwayat Belajar</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm max-w-sm mb-8">
         Kamu belum menyelesaikan latihan soal atau try out pada periode ini. Mulai kerjakan latihan soal pertama kamu sekarang!
       </p>
       <a href="{{ route('latihan.index') }}" 
@@ -163,38 +44,38 @@
     {{-- ── METRIC CARDS ────────────────────────────── --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {{-- Card 1: Rata-rata Skor --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
-        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🎯</div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
+        <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🎯</div>
         <div>
-          <span class="text-xs text-gray-400 font-medium block">Rata-rata Skor</span>
-          <span class="text-xl font-extrabold text-blue-600 block leading-tight mt-1">{{ $avgScore }}%</span>
+          <span class="text-xs text-gray-400 dark:text-gray-400 font-medium block">Rata-rata Skor</span>
+          <span class="text-xl font-extrabold text-blue-600 dark:text-blue-400 block leading-tight mt-1">{{ $avgScore }}%</span>
         </div>
       </div>
 
       {{-- Card 2: Latihan Selesai --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
-        <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">📝</div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
+        <div class="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">📝</div>
         <div>
-          <span class="text-xs text-gray-400 font-medium block">Latihan Selesai</span>
-          <span class="text-xl font-extrabold text-green-600 block leading-tight mt-1">{{ $totalSessions }} Paket</span>
+          <span class="text-xs text-gray-400 dark:text-gray-400 font-medium block">Latihan Selesai</span>
+          <span class="text-xl font-extrabold text-green-600 dark:text-green-400 block leading-tight mt-1">{{ $totalSessions }} Paket</span>
         </div>
       </div>
 
       {{-- Card 3: Waktu Belajar --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
-        <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">⏱️</div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
+        <div class="w-12 h-12 bg-yellow-50 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">⏱️</div>
         <div>
-          <span class="text-xs text-gray-400 font-medium block">Waktu Belajar</span>
-          <span class="text-xl font-extrabold text-yellow-600 block leading-tight mt-1">{{ $timeSpentLabel }}</span>
+          <span class="text-xs text-gray-400 dark:text-gray-400 font-medium block">Waktu Belajar</span>
+          <span class="text-xl font-extrabold text-yellow-600 dark:text-yellow-400 block leading-tight mt-1">{{ $timeSpentLabel }}</span>
         </div>
       </div>
 
       {{-- Card 4: Rasio Ketepatan --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
-        <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">📊</div>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-5 shadow-sm flex items-center gap-4 hover:scale-[1.01] transition-transform duration-200">
+        <div class="w-12 h-12 bg-purple-50 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">📊</div>
         <div>
-          <span class="text-xs text-gray-400 font-medium block">Total Soal</span>
-          <span class="text-xl font-extrabold text-purple-600 block leading-tight mt-1">{{ $totalCorrect + $totalWrong + $totalEmpty }} Soal</span>
+          <span class="text-xs text-gray-400 dark:text-gray-400 font-medium block">Total Soal</span>
+          <span class="text-xl font-extrabold text-purple-600 dark:text-purple-400 block leading-tight mt-1">{{ $totalCorrect + $totalWrong + $totalEmpty }} Soal</span>
         </div>
       </div>
     </div>
@@ -203,7 +84,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       
       {{-- Line Chart: Perkembangan Nilai --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm lg:col-span-2 flex flex-col"
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm lg:col-span-2 flex flex-col"
         x-data="{
             chartInstance: null,
             init() {
@@ -255,7 +136,7 @@
         }">
         <div class="flex justify-between items-center mb-4">
           <div>
-            <h3 class="font-bold text-gray-800 text-base">Grafik Perkembangan Nilai</h3>
+            <h3 class="font-bold text-gray-800 dark:text-gray-100 text-base">Grafik Perkembangan Nilai</h3>
             <p class="text-xs text-gray-400">Grafik tren skor dari latihan-latihan terakhirmu.</p>
           </div>
           <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold">TREN SKOR</span>
@@ -266,7 +147,7 @@
       </div>
 
       {{-- Doughnut Chart: Ketepatan Jawaban --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col"
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm flex flex-col"
         x-data="{
             chartInstance: null,
             init() {
@@ -301,7 +182,7 @@
         }">
         <div class="flex justify-between items-center mb-4">
           <div>
-            <h3 class="font-bold text-gray-800 text-base">Rasio Jawaban</h3>
+            <h3 class="font-bold text-gray-800 dark:text-gray-100 text-base">Rasio Jawaban</h3>
             <p class="text-xs text-gray-400">Komposisi akurasi jawaban Anda.</p>
           </div>
           <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">AKURASI</span>
@@ -316,8 +197,8 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       
       {{-- Subject Strengths --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
-        <h3 class="font-bold text-gray-800 text-base mb-1">Performa Per Mata Pelajaran</h3>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
+        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-base mb-1">Performa Per Mata Pelajaran</h3>
         <p class="text-xs text-gray-400 mb-6">Skor rata-rata performamu di tiap mata pelajaran.</p>
 
         @if(empty($subjectsList))
@@ -334,11 +215,11 @@
                 $textColor = $score >= 80 ? 'text-green-700' : ($score >= 60 ? 'text-blue-700' : 'text-yellow-700');
               @endphp
               <div class="space-y-1.5">
-                <div class="flex justify-between text-sm font-semibold text-gray-700">
+                <div class="flex justify-between text-sm font-semibold text-gray-700 dark:text-gray-300">
                   <span>{{ $subject }}</span>
-                  <span class="{{ $textColor }}">{{ $score }}%</span>
+                  <span class="{{ $textColor }} dark:opacity-80">{{ $score }}%</span>
                 </div>
-                <div class="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+                <div class="w-full bg-gray-100 dark:bg-gray-700 h-2.5 rounded-full overflow-hidden">
                   <div class="h-full {{ $color }} rounded-full transition-all duration-500" style="width: {{ $score }}%"></div>
                 </div>
               </div>
@@ -348,24 +229,24 @@
       </div>
 
       {{-- Rekomendasi Topik Lemah (AI Smart Tutor) --}}
-      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm flex flex-col justify-between">
         <div>
           <div class="flex items-center gap-2 mb-2">
             <span class="text-xl">🤖</span>
-            <h3 class="font-bold text-gray-800 text-base">Rekomendasi Tutor AI</h3>
+            <h3 class="font-bold text-gray-800 dark:text-gray-100 text-base">Rekomendasi Tutor AI</h3>
           </div>
           <p class="text-xs text-gray-400 mb-6">Analisis topik lemah Anda dan saran belajar terarah dari Smartka AI.</p>
 
           @if(empty($weakTopics))
-            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 text-center text-sm text-blue-700">
+            <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 rounded-2xl p-5 text-center text-sm text-blue-700 dark:text-blue-300">
               🎉 **Luar biasa!** Belum terdeteksi topik yang lemah. Pertahankan prestasimu dan terus tantang dirimu dengan materi baru!
             </div>
           @else
             <div class="space-y-3">
-              <p class="text-sm font-semibold text-gray-600 mb-2">Topik yang perlu kamu tingkatkan:</p>
+              <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Topik yang perlu kamu tingkatkan:</p>
               <div class="flex flex-wrap gap-2">
                 @foreach($weakTopics as $topic)
-                  <span class="bg-red-50 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-xl border border-red-100 flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
+                  <span class="bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-semibold px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-800 flex items-center gap-1.5 hover:scale-[1.02] transition-transform">
                     ⚠️ {{ $topic }}
                   </span>
                 @endforeach
@@ -374,7 +255,7 @@
           @endif
         </div>
 
-        <div class="mt-6 pt-4 border-t border-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="mt-6 pt-4 border-t border-gray-50 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p class="text-xs text-gray-400 text-center sm:text-left">Tanyakan langsung pembahasannya pada tutor pintar Anda!</p>
           <a href="{{ route('ai.tutor') }}"
             class="w-full sm:w-auto text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-xl transition text-sm flex justify-center items-center gap-2">
